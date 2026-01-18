@@ -201,8 +201,28 @@ class Hashmap {
             }
         }
         const currentLoadFactor = count / this.capacity;
-        if(currentLoadFactor > this.loadFactor) {
-            this.capacity *= 2;
+        if(currentLoadFactor >= this.loadFactor) {
+            this.resize();
+        }
+    }
+
+    resize() {
+        const oldTable = this.table;
+        const oldCapacity = this.capacity;
+
+        this.capacity *= 2;
+        this.table = new Array(this.capacity);
+
+        // 旧テーブルの全ノードを再ハッシュ
+        for (let i = 0; i < oldCapacity; i++) {
+            const list = oldTable[i];
+            if (!list) continue;
+
+            let node = list.head;
+            while (node) {
+            this.set(node.key, node.value); // ← 新 capacity で再計算される
+            node = node.next;
+            }
         }
     }
 
@@ -221,7 +241,12 @@ test.set('ice cream', 'white')
 test.set('jacket', 'blue')
 test.set('kite', 'pink')
 test.set('lion', 'golden')
-test.set('moon', 'silver')
+test.set('watch', 'golden')
+test.set('koko', 'golden')
+test.set('alpha', 'silver')
+test.set('bs', 'silver')
+test.set('it', 'silver')
+test.set('test', 'silver')
+test.set('aiaai', 'silver')
 
-console.log(test.entries())
-// console.log(test.table[12])
+console.log(test)
